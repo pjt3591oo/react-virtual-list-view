@@ -8,20 +8,23 @@ import useVirtualRef from '../hooks/useVirtualRef';
   viewCount: 화면에 보여지는 데이터 갯수
 */
 
-const Virtual = ({ viewHeight=500, cellHeight=50, viewRange=100, data=[] }) => {
+const Virtual = ({ viewHeight=500, cellHeight=50, viewRange=100, data=[], cellRender }) => {
   const viewCount = viewHeight / cellHeight;
   
-  const [viewData, setViewData] = useState(data.slice(0, viewCount + viewRange));
+  const [ viewData, setViewData ] = useState(data.slice(0, viewCount + viewRange));
   const { ref, currentTopIdx } = useVirtualRef({
     listViewHeight: viewHeight,
     cellHeight
   });
   
   useEffect(() => {
-    console.log('render?')
     let {isRender, endIdx} = getLastIdx()
+    console.log('isRender', isRender, endIdx);
+
     if (isRender) return
-      
+
+    console.log('add item on Virtual View')
+
     setViewData(
       data.slice(0, endIdx)
     );
@@ -52,7 +55,7 @@ const Virtual = ({ viewHeight=500, cellHeight=50, viewRange=100, data=[] }) => {
       >
         {viewData.map((item, idx) => (
           <li key={idx} style={{height: cellHeight}}>
-            {idx}-{item}
+            {cellRender(item, idx)}
           </li>
         ))}
       </ul>
@@ -64,6 +67,7 @@ Virtual.propsType = {
   viewHeightviewHeight: PropTypes.number,
   cellHeight: PropTypes.number,
   viewRange: PropTypes.number,
+  cellRender: PropTypes.func
 }
 
 export default Virtual;

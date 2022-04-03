@@ -12,10 +12,6 @@ function App() {
   const [isVisibleVirtualListView, setIsVisibleVirtualListView] = useState(false);
   const [isVisibleListView, setIsVisibleListView] = useState(false);
 
-  useEffect(() => {
-    console.log(cnt)
-  }, [cnt])
-
   const onChangeDataCntHandler = (evt) => {
     if (isNaN(evt.target.value) || parseInt(evt.target.value) > 1_000_000) return
     
@@ -47,7 +43,18 @@ function App() {
           </h1>
           <div style={{width: 300}}>
             {isVisibleVirtualListView
-              ? <VirtualListView data={data} viewHeight={300} cellHeight={30} />
+              ? <VirtualListView 
+                  data={data} 
+                  viewHeight={300} 
+                  cellHeight={30} 
+                  cellRender={(item, idx) => (
+                    <div>
+                      <span style={{color: 'green'}}>{idx}</span>
+                      -
+                      <span style={{color: 'blue'}}>{item}</span>
+                    </div>
+                  )}
+                />
               : <></>
             }
           </div>
